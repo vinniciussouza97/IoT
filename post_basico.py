@@ -3,9 +3,9 @@ import requests
 import math
 import random
 
-TOKEN = "A1E-nkLIQeYE47RzHQ0ymL0jlDxBJWjwZk"  # Put your TOKEN here
-DEVICE_LABEL = "raspberry"  # Put your device label here 
-VARIABLE_LABEL_1 = "temperatura"  # Put your first variable label here
+TOKEN = "A1E-8OBKlCZKZcP7HkwdMUUtp8XqveUIDh"  # Put your TOKEN here
+DEVICE_LABEL = "alexa"  # Put your device label here 
+VARIABLE_LABEL_1 = "luminosidade"  # Put your first variable label here
 
 def build_payload(variable_1):
     # Creates two random values for sending data
