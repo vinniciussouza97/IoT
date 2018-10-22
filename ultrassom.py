@@ -47,7 +47,7 @@ time.sleep(1)
 
 print ("Sampling Rate:", sampling_rate, "Hz")
 print ("Distances (cm)")
-dist_ant=0
+
 # Loop principal. Será executado até que que seja pressionado CTRL-C
 while True:
 
@@ -80,9 +80,8 @@ while True:
     if end_t - start_t < max_delta_t:
         delta_t = end_t - start_t
         distance = 100*(0.5 * delta_t * speed_of_sound)
-        dist_ant = distance
     else:
-        distance = dist_ant
+        distance = -1
 
     # Imprime o valor da distância arredondado para duas casas decimais
     print (round(distance, 2))
