@@ -20,7 +20,11 @@ signal.signal(signal.SIGINT, sigint_handler)
 TRIG = 23
 ECHO = 24
 
+TRIG2 = 17
+ECHO2 = 27
+
 porta = 1
+porta2 = 1
 pessoas = 0
 
 sampling_rate = 20.0
@@ -30,14 +34,18 @@ max_delta_t = max_distance / speed_of_sound
 
 GPIO.setup(TRIG, GPIO.OUT)
 GPIO.setup(ECHO, GPIO.IN)
-
+GPIO.setup(TRIG2, GPIO.OUT)
+GPIO.setup(ECHO2, GPIO.IN)
 
 GPIO.output(TRIG, False)
+GPIO.output(TRIG2, False)
 time.sleep(1)
 
 print ("Sampling Rate:", sampling_rate, "Hz")
 print ("Distances (cm)")
-dist_ant=0
+
+dist_ant = 0
+dist_ant2 = 0
 
 TOKEN = "A1E-nkLIQeYE47RzHQ0ymL0jlDxBJWjwZk"  # Put your TOKEN here
 DEVICE_LABEL = "raspberry"  # Put your device label here 
@@ -95,7 +103,6 @@ while True:
     else:
         distance = dist_ant
 
-    # Imprime o valor da distância arredondado para duas casas decimais
     print (round(distance, 2))
     
     if distance < 28:
@@ -105,6 +112,37 @@ while True:
         pessoas += 1
         payload = build_payload(VARIABLE_LABEL_1, pessoas)
         post_request(payload)
+
+    GPIO.output(TRIG2, True)
+    time.sleep(0.00001)
+    GPIO.output(TRIG2, False)
+
+
+    while GPIO.input(ECHO2) == 0:
+      start_t = time.time()
+
+
+    while GPIO.input(ECHO2) == 1 and time.time() - start_t < max_delta_t:
+      end_t = time.time()
+
+
+    if end_t - start_t < max_delta_t:
+        delta_t = end_t - start_t
+        distance2 = 100*(0.5 * delta_t * speed_of_sound)
+        dist_ant2 = distance2
+    else:
+        distance2 = dist_ant2
+
+    print (round(distance2, 2))
+    
+    if distance2 < 28:
+        porta2 = 1
+    elif porta2 == 1:
+        porta2 = 0
+        pessoas -= 1
+        payload = build_payload(VARIABLE_LABEL_1, pessoas)
+        post_request(payload)
+        if pessoas < 0:
+            pessoas = 0
                 
-    # Um pequeno delay para manter a média da taxa de amostragem
     time.sleep(1/sampling_rate)
